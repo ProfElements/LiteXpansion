@@ -47,13 +47,12 @@ public class NanoBlade extends SimpleSlimefunItem<ItemUseHandler> implements Rec
     public ItemUseHandler getItemHandler() {
         return event -> {
             final ItemMeta nanoBladeMeta = event.getItem().getItemMeta();
-            final Enchantment enchantment = Enchantment.getByKey(Constants.GLOW_ENCHANT);
-            boolean enabled = !nanoBladeMeta.removeEnchant(enchantment);
+            boolean enabled = !nanoBladeMeta.getEnchantmentGlintOverride();
 
             int damage;
 
             if (enabled && getItemCharge(event.getItem()) > getRemovedChargePerTick()) {
-                nanoBladeMeta.addEnchant(enchantment, 1, false);
+                nanoBladeMeta.setEnchantmentGlintOverride(true);
                 nanoBladeMeta.setDisplayName(ChatColor.DARK_GREEN + "Nano Blade" + ChatColor.GREEN + " (On)");
 
                 damage = 13; // Base is 7 so 7 + 13 = 20
@@ -89,7 +88,7 @@ public class NanoBlade extends SimpleSlimefunItem<ItemUseHandler> implements Rec
     @Override
     public boolean isEnabled(@Nonnull ItemMeta meta) {
         final Optional<Boolean> opt = Utils.getOptionalBoolean(meta, Constants.NANO_BLADE_ENABLED);
-
-        return (opt.isPresent() && opt.get()) || meta.hasEnchant(Enchantment.getByKey(Constants.GLOW_ENCHANT));
+        final Boolean hasOverride = meta.getEnchantmentGlintOverride();
+        return (opt.isPresent() && opt.get()) || hasOverride;
     }
 }

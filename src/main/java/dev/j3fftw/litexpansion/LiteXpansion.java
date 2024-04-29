@@ -41,8 +41,6 @@ public class LiteXpansion extends JavaPlugin implements SlimefunAddon {
             new BlobBuildUpdater(this, getFile(), "LiteXpansion", "Dev").start();
         }
 
-        registerEnchantments();
-
         if (getConfig().getBoolean("options.nerf-other-addons", true)) {
             getServer().getScheduler().runTask(this, this::nerfCrap);
         }
@@ -63,23 +61,6 @@ public class LiteXpansion extends JavaPlugin implements SlimefunAddon {
     @Override
     public void onDisable() {
         setInstance(null);
-    }
-
-    private void registerEnchantments() {
-        if (!Enchantment.isAcceptingRegistrations()) {
-            Reflections.setStaticField(Enchantment.class, "acceptingNew", true);
-        }
-
-        Enchantment glowEnchantment = new GlowEnchant(Constants.GLOW_ENCHANT, new String[] {
-            "ADVANCED_CIRCUIT", "NANO_BLADE", "GLASS_CUTTER", "LAPOTRON_CRYSTAL",
-            "ADVANCEDLX_SOLAR_HELMET", "HYBRID_SOLAR_HELMET", "ULTIMATE_SOLAR_HELMET",
-            "DIAMOND_DRILL"
-        });
-
-        // Prevent double-registration errors
-        if (Enchantment.getByKey(glowEnchantment.getKey()) == null) {
-            Enchantment.registerEnchantment(glowEnchantment);
-        }
     }
 
     private void nerfCrap() {
